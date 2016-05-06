@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using IdentityDemo.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace IdentityDemo.Controllers
 {
@@ -321,6 +322,49 @@ namespace IdentityDemo.Controllers
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
+
+        //mwiliams
+        // GET: /Manage/UserInfo
+        public ActionResult UserInfo()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return View("Error");
+            }
+            return View(user);
+        }
+
+        //mwilliams
+        // POST: /Manage/EditInfo
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditInfo(ApplicationUser UpdatedUser)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(UpdatedUser);
+            }
+
+
+            var SavedUser = UserManager.FindById(UpdatedUser.Id);
+            SavedUser.FirstName= UpdatedUser.FirstName;
+            SavedUser.LastName = UpdatedUser.LastName;
+            SavedUser.Email = UpdatedUser.Email;
+            SavedUser.Address = UpdatedUser.Address;
+            SavedUser.City = UpdatedUser.City;
+            SavedUser.PostalCode = UpdatedUser.PostalCode;
+            SavedUser.Province = UpdatedUser.Province;
+            SavedUser.UserName = SavedUser.UserName;//do not change UserName
+
+            //ApplicationDbContext db = new ApplicationDbContext();
+            //db.Entry(UpdatedUser).State = System.Data.Entity.EntityState.Modified;
+            UserManager.Update(SavedUser);
+
+            return RedirectToAction("Index","Manage");
+        }
+
+
 
         protected override void Dispose(bool disposing)
         {

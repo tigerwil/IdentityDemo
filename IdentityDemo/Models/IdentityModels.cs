@@ -60,5 +60,6 @@ namespace IdentityDemo.Models
         {
             return new ApplicationDbContext();
         }
+
     }
 }
