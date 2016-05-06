@@ -45,7 +45,8 @@
     <div class="form-group">
         @Html.LabelFor(m => m.Province, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Province, new { @class = "form-control" })
+            @*@Html.TextBoxFor(m => m.Province, new { @class = "form-control" })*@
+            @Html.DropDownList("Province",IdentityDemo.Models.CanadianProvinces.ProvinceSelectList, new { @class = "form-control" })
         </div>
     </div>
     //end custom properties
